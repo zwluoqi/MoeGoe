@@ -54,6 +54,8 @@ class Speaker():
             **self.hps_ms.model)
         _ = self.net_g_ms.eval()
         load_checkpoint(str(Path(__file__).parent/pthfile), self.net_g_ms)
+        # print(self.hps_ms.speakers)
+
 
     def get_text(self, text: str, cleaned=False):
         if cleaned:
@@ -64,6 +66,10 @@ class Speaker():
             text_norm = commons.intersperse(text_norm, 0)
         text_norm = LongTensor(text_norm)
         return text_norm
+    
+    def getSpeakers(self):
+        # print(self.hps_ms.speakers)
+        return self.hps_ms.speakers
 
     def main(self, req: func.HttpRequest) -> func.HttpResponse:
         text = req.params.get('text')
@@ -71,12 +77,14 @@ class Speaker():
         if not text and not cleantext:
             return func.HttpResponse(
                 "400 BAD REQUEST: null text",
-                status_code=400
+                status_code=400,
+                mimetype=''
             )
         if text and cleantext:
             return func.HttpResponse(
                 "400 BAD REQUEST: text and cleantext cannot be set both",
-                status_code=400
+                status_code=400,
+                mimetype=''
             )
         cleaned = False
         if cleantext:
@@ -86,26 +94,30 @@ class Speaker():
         if not speaker_id:
             return func.HttpResponse(
                 "400 BAD REQUEST: null speaker id",
-                status_code=400
+                status_code=400,
+                mimetype=''
             )
         try:
             speaker_id = int(speaker_id)
         except:
             return func.HttpResponse(
                 "400 BAD REQUEST: invalid speaker id",
-                status_code=400
+                status_code=400,
+                mimetype=''
             )
         if speaker_id not in range(self.hps_ms.data.n_speakers):
             return func.HttpResponse(
                 "400 BAD REQUEST: speaker id out of range",
-                status_code=400
+                status_code=400,
+                mimetype=''
             )
         format = req.params.get('format')
         if not format: format = "ogg"
         if format not in ("ogg", "mp3", "wav"):
             return func.HttpResponse(
                 "400 BAD REQUEST: invalid format",
-                status_code=400
+                status_code=400,
+                mimetype=''
             )
         try:
             stn_tst = self.get_text(unquote(text), cleaned)
@@ -114,7 +126,8 @@ class Speaker():
             traceback.print_exc()
             return func.HttpResponse(
                 "400 BAD REQUEST: invalid text",
-                status_code=400
+                status_code=400,
+                mimetype=''
             )
         try:
             with no_grad():
@@ -145,4 +158,5 @@ class Speaker():
             return func.HttpResponse(
                         "500 Internal Server Error\n"+str(e),
                         status_code=500,
+                        mimetype=''
                     )

@@ -5,13 +5,24 @@ import http_fun as func
 from api import Speaker
 import io
 import sys
+from flask import jsonify
 
 app = Flask(__name__)
 speaker = Speaker('models/genshion/config.json', 'models/genshion/model.pth')
 
+@app.route('/moegoe_web_speaker')
+def moegoe_web_speaker():
+    print('hello world moegoe_web_speaker')
+    response = make_response(jsonify(speaker.getSpeakers()))
+    response.headers['Content-Type'] = 'text/plain'
+    response.status_code = 200
+    return response
+
+
+
 @app.route('/moegoe_web')
 def moegoe_web():
-    print('hello world get')
+    print('hello world moegoe_web')
     data = request.args.to_dict()
     
     funcrequest = func.HttpRequest()
