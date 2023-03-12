@@ -16,4 +16,5 @@ ko_pron
 indic_transliteration
 num_thai
 opencc
-audonnx
+flask
+av
