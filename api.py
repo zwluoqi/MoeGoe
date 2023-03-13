@@ -54,7 +54,7 @@ class Speaker():
             **self.hps_ms.model)
         _ = self.net_g_ms.eval()
         load_checkpoint(str(Path(__file__).parent/pthfile), self.net_g_ms)
-        # print(self.hps_ms.speakers)
+        print(self.hps_ms)
 
 
     def get_text(self, text: str, cleaned=False):
@@ -68,7 +68,8 @@ class Speaker():
         return text_norm
     
     def getSpeakers(self):
-        # print(self.hps_ms.speakers)
+        print(self.hps_ms.speakers)
+        print(self.hps_ms.data.n_speakers)
         return self.hps_ms.speakers
 
     def main(self, req: func.HttpRequest) -> func.HttpResponse:

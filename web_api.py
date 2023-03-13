@@ -10,12 +10,22 @@ from flask import jsonify
 app = Flask(__name__)
 speaker = Speaker('models/genshion/config.json', 'models/genshion/model.pth')
 
+@app.route('/moegoe_web_test')
+def moegoe_web_test():
+    print('hello world moegoe_web_test')
+    response = make_response("welcome")
+    response.headers['Content-Type'] = 'text/plain'
+    response.status_code = 200
+    print('end hello world moegoe_web_test')
+    return response
+
 @app.route('/moegoe_web_speaker')
 def moegoe_web_speaker():
     print('hello world moegoe_web_speaker')
     response = make_response(jsonify(speaker.getSpeakers()))
     response.headers['Content-Type'] = 'text/plain'
     response.status_code = 200
+    print('end hello world moegoe_web_speaker')
     return response
 
 
